@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.zjw.blog.deal.blog.dao.BlogMapper" >
+  <resultMap id="BaseResultMap" type="org.zjw.blog.deal.blog.entity.Blog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="summary" property="summary" jdbcType="VARCHAR" />
+    <result column="releaseDate" property="releaseDate" jdbcType="TIMESTAMP" />
+    <result column="clickHit" property="clickHit" jdbcType="INTEGER" />
+    <result column="replyHit" property="replyHit" jdbcType="INTEGER" />
+    <result column="typeId" property="typeId" jdbcType="INTEGER" />
+    <result column="keyWord" property="keyWord" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    <result column="userId" property="userId" jdbcType="INTEGER"/>
+    <result column="deleteFlag" property="deleteFlag" jdbcType="INTEGER"/>
+    <result column="state" property="state" jdbcType="INTEGER"/>
+    <result column="createDate" property="createDate" jdbcType="TIMESTAMP"/>
+  </resultMap>
+  <!-- 第一种 对应直接调用里面的方法 -->
+	<resultMap id="BaseResultMapVo" type="org.zjw.blog.base.vo.blog.BlogVo"
+		extends="BaseResultMap">
+		<association property="blogType" column="typeId" javaType="org.zjw.blog.deal.blog.entity.BlogType"
+			select="org.zjw.blog.deal.blog.dao.BlogTypeMapper.selectByPrimaryKey" />
+		<collection property="commentList" column="id" 
+			select="org.zjw.blog.deal.blog.dao.BlogCommentMapper.selectByBlogId" />
+	</resultMap>
+	<resultMap id="BaseResultMapVo2" type="org.zjw.blog.base.vo.blog.BlogVo"
+		extends="BaseResultMap">
+		<result column="releaseDateStr" property="releaseDateStr" jdbcType="VARCHAR"/>
+		<!-- javaType必须要加上,不然会报空指针异常 -->			
+		<association property="blogType" javaType="org.zjw.blog.deal.blog.entity.BlogType" >
+			<id column="typeId" property="id"/>
+			<result column="typeName"  property="typeName"/>
+		</association>
+	</resultMap>
+  <sql id="Base_Column_List" >
+    id, title, summary, releaseDate, clickHit, replyHit, typeId, keyWord,content,userId,deleteFlag
+    ,state,createDate
+  </sql>
+  <!-- 第一种  不表连接 直接调用对象属性相对应的mapper方法 -->
+    <select id="selectVoById" resultMap="BaseResultMap" parameterType="int">
+  		select 
+  		<include refid="Base_Column_List"/>
+  		 FROM blog  
+  		 <where>
+  		 	id=#{id}
+  		 </where>
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"/> 
+  	from blog
+  </select>
+  
+  <!-- 按条件查询 -->
+  <select id="selectByCondition" resultMap="BaseResultMap" parameterType="map">
+  	select 
+  		<include refid="Base_Column_List"/>
+  	 	from blog b
+  	 	WHERE 1=1
+ 		<if test="releaseDate!=null">
+ 		AND	DATE_FORMAT(releaseDate,'%Y-%m')=#{releaseDate}
+ 		</if>
+ 		<if test="typeId!=null">
+ 		AND b.typeId=#{typeId}
+ 		</if>
+		AND b.deleteFlag=1
+		AND b.state=1
+  	 	order by b.releaseDate desc
+  	 	<if test="start!=null and rows!=null">
+  	 	LIMIT #{start},#{rows}
+  	 	</if>  
+  </select>
+   <select id="selectCountByCondition" resultType="int" parameterType="map">
+  	select 
+  		Count(*)
+  	 	from blog
+			where 1=1  	 	
+  	 		<if test="releaseDate!=null">
+  	 			AND DATE_FORMAT(releaseDate,'%Y-%m')=#{releaseDate}
+  	 		</if>
+  	 		<if test="typeId!=null">
+  	 			AND typeId=#{typeId}
+  	 		</if>
+  	 		AND deleteFlag=1
+  </select>
+    <!-- 按条件查询 -->
+  <select id="selectByConditionToBack" resultMap="BaseResultMapVo2" parameterType="map">
+  	select 
+  		b.id as id, title, summary, releaseDate,releaseDate as releaseDateStr
+  		, clickHit, replyHit, keyWord,content
+  		,bt.id as typeId
+  		,bt.typeName
+  		,b.state
+  		,b.createDate
+  	 	from blog b
+  	 	LEFT JOIN blog_type bt ON(b.typeId=bt.id)
+  	 	WHERE 1=1
+  	 		<if test="releaseDate!=null">
+  	 			AND	DATE_FORMAT(releaseDate,'%Y-%m')=#{releaseDate}
+  	 		</if>
+  	 		<if test="typeId!=null">
+	 			AND bt.Id=#{typeId}
+  	 		</if>
+  	 		<if test="title!=null and title!=''">
+	 			<!-- 两种方法都可以模糊查询  #{title}两边必须有空格才能查询的到 经测试  此方法不适用与sqlserver. oracle没测试过--> 	
+	          	<!-- AND title like '%' #{title} '%' -->
+				<![CDATA[  
+	           		AND title like '%' #{title} '%'  
+	          	]]>
+			</if>
+	  	 	AND b.deleteFlag=1
+	  	 	<if test="state!=null">
+	  	 		AND state=#{state}
+	  	 	</if>
+	  	 	<if test="order==null and sort==null">
+	  	 	order by b.createDate desc
+	  	 	</if>
+	  	 	<if test="order!=null and sort!=null">
+	  	 	order by b.${sort} ${order}
+	  	 	</if>
+  	 		<if test="start!=null and rows!=null">
+  	 		LIMIT #{start},#{rows}
+  	 		</if>  
+  </select>
+  <select id="selectCountByConditionToBack" resultType="int" parameterType="map">
+  	select 
+  		Count(*)
+  	 	from blog b
+  	 	LEFT JOIN blog_type bt ON(b.typeId=bt.id)
+  	 	WHERE 1=1
+  	 		<if test="releaseDate!=null">
+  	 			AND	DATE_FORMAT(releaseDate,'%Y-%m')=#{releaseDate}
+  	 		</if>
+  	 		<if test="typeId!=null">
+	 			AND bt.Id=#{typeId}
+  	 		</if>
+  	 		<if test="title!=null and title!=''">
+	 			<!-- 两种方法都可以模糊查询  #{title}两边必须有空格才能查询的到--> 	
+	          	<!-- AND title like '%' #{title} '%' -->
+				<![CDATA[  
+	           		AND title like '%' #{title} '%'  
+	          	]]>
+			</if>
+	  	 	AND b.deleteFlag=1
+  </select>
+ 
+  <!-- 查询日期下的博客数量 -->
+  <select id="selectDateCountByReleaseDate" resultType="map" parameterType="map">
+  		SELECT
+		DATE_FORMAT(releaseDate,'%Y-%m') AS releaseDate,
+		Count(*) AS blogCount
+		FROM blog
+		where  deleteFlag=1
+		GROUP BY DATE_FORMAT(releaseDate,'%Y-%m')
+		ORDER BY DATE_FORMAT(releaseDate,'%Y-%m') DESC
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from blog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from blog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 逻辑删除 -->
+  <update id="deleteLogic" parameterType="map">
+  	 UPDATE blog SET deleteFlag=0  
+  	 WHERE id=#{id} and deleteFlag=1 and userId=#{userId}
+  </update>
+  <!-- 逻辑批删除 -->
+  <update id="deleteLogicBatch" parameterType="map">
+  	 UPDATE blog SET deleteFlag=0  
+  	 WHERE 
+  	 deleteFlag=1
+  	 and id in
+  	 <foreach collection="array" item="id" open="(" close=")" separator=",">
+  	 	#{id}
+  	 </foreach>
+  </update>
+  <!-- 复原数据 -->
+  <update id="restore" parameterType="map">
+  	 UPDATE blog SET deleteFlag=1  
+  	 WHERE id=#{id} and deleteFlag=0 and userId=#{userId}
+  </update>
+  <!-- 复原批数据 -->
+  <update id="restoreBatch">
+  	UPDATE blog SET deleteFlag=1  
+  	WHERE  1=1 
+  	and userId=#{userId}
+  	and deleteFlag=0
+  	<foreach collection="ids" item="id" open="and("  close=")" separator="or">
+  		id=${id}
+  	</foreach>
+  </update>
+  
+  <insert id="insert" parameterType="org.zjw.blog.deal.blog.entity.Blog" >
+    insert into blog ( title, summary, 
+      releaseDate, clickHit, replyHit, 
+      typeId, keyWord, content,userId,deleteFlag,state,createDate
+      )
+    values (#{title,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
+      #{releaseDate,jdbcType=TIMESTAMP}, #{clickHit,jdbcType=INTEGER}, #{replyHit,jdbcType=INTEGER}, 
+      #{typeId,jdbcType=INTEGER}, #{keyWord,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}
+      #{userId,jdbcType=INTEGER}, #{deleteFlag,jdbcType=INTEGER}
+      #{state,jdbcType=INTEGER},#{createDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelectiveReturn" parameterType="org.zjw.blog.deal.blog.entity.Blog" useGeneratedKeys="true">
+  <selectKey resultType="java.lang.Integer" order="AFTER"   keyProperty="id" statementType="STATEMENT" >
+  	SELECT LAST_INSERT_ID() AS id
+  	<!--这里需要说明一下不同的数据库主键的生成，对各自的数据库有不同的方式：
+		mysql:SELECT LAST_INSERT_ID() AS VALUE
+		mssql:select @@IDENTITY as value
+		oracle:SELECT STOCKIDSEQUENCE.NEXTVAL AS VALUE FROM DUAL
+		还有一点需要注意的是不同的数据库生产商生成主键的方式不一样，有些是预先生成 (pre-generate)主键的，如Oracle和PostgreSQL。 
+		有些是事后生成(post-generate)主键的，如MySQL和SQL Server 所以如果是Oracle数据库，则需要将selectKey写在insert之前
+		也可以加上属性 order="before"
+		生成的主键会自动set到实体类中  注意keyProperty指定的字段一定要对应实体中的字段 必须要有get set方法-->
+  </selectKey>
+    insert into blog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="summary != null" >
+        summary,
+      </if>
+      <if test="releaseDate != null" >
+        releaseDate,
+      </if>
+      <if test="clickHit != null" >
+        clickHit,
+      </if>
+      <if test="replyHit != null" >
+        replyHit,
+      </if>
+      <if test="typeId != null" >
+        typeId,
+      </if>
+      <if test="keyWord != null" >
+        keyWord,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="userId!=null">
+      	userId,
+      </if>
+      <if test="deleteFlag!=null">
+      	deleteFlag,
+      </if>
+      <if test="state!=null">
+      	state,
+      </if>
+      <if test="createDate!=null">
+      	createDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="releaseDate != null" >
+        #{releaseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clickHit != null" >
+        #{clickHit,jdbcType=INTEGER},
+      </if>
+      <if test="replyHit != null" >
+        #{replyHit,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="keyWord != null" >
+        #{keyWord,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="userId!=null">
+      	#{userId,jdbcType=INTEGER},
+      </if>
+      <if test="deleteFlag!=null">
+      	#{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="state!=null">
+      	#{state,jdbcType=INTEGER},
+      </if>
+      <if test="createDate!=null">
+      	#{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zjw.blog.deal.blog.entity.Blog" >
+    update blog
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        summary = #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="releaseDate != null" >
+        releaseDate = #{releaseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clickHit != null" >
+        clickHit = #{clickHit,jdbcType=INTEGER},
+      </if>
+      <if test="replyHit != null" >
+        replyHit = #{replyHit,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null" >
+        typeId = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="keyWord != null" >
+        keyWord = #{keyWord,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+       <if test="state!=null">
+      	state=#{state,jdbcType=INTEGER},
+      </if>
+      <if test="createDate!=null">
+      	createDate=#{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zjw.blog.deal.blog.entity.Blog" >
+    update blog
+    set title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      releaseDate = #{releaseDate,jdbcType=TIMESTAMP},
+      clickHit = #{clickHit,jdbcType=INTEGER},
+      replyHit = #{replyHit,jdbcType=INTEGER},
+      typeId = #{typeId,jdbcType=INTEGER},
+      keyWord = #{keyWord,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
+      createDate = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

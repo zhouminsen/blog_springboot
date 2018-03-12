@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.zjw.blog.deal.download.dao.FileRecordMapper">
+    <resultMap id="BaseResultMap" type="org.zjw.blog.deal.download.entity.FileRecord">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="fileName" property="fileName" jdbcType="VARCHAR"/>
+        <result column="createDate" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="updateDate" property="updateDate" jdbcType="TIMESTAMP"/>
+        <result column="createUserId" property="createUserId" jdbcType="INTEGER"/>
+        <result column="updateUserId" property="updateUserId" jdbcType="INTEGER"/>
+        <result column="fileAllUrl" property="fileAllUrl" jdbcType="VARCHAR"/>
+        <result column="fileDir" property="fileDir" jdbcType="VARCHAR"/>
+        <result column="deleteFlag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, fileName, createDate, updateDate, createUserId, updateUserId, fileAllUrl, fileDir, 
+    deleteFlag
+  </sql>
+    <!--根据查询条件获得文件记录-->
+    <select id="getFileRecordList" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM filerecord
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select 'false' as QUERYID,
+        <include refid="Base_Column_List"/>
+        from filerecord
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from filerecord
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="org.zjw.blog.deal.download.entity.FileRecord">
+    insert into filerecord (id, fileName, createDate, 
+      updateDate, createUserId, updateUserId, 
+      fileAllUrl, fileDir, deleteFlag
+      )
+    values (#{id,jdbcType=INTEGER}, #{fileName,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
+      #{fileAllUrl,jdbcType=VARCHAR}, #{fileDir,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=INTEGER}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="org.zjw.blog.deal.download.entity.FileRecord">
+        insert into filerecord
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="fileName != null">
+                fileName,
+            </if>
+            <if test="createDate != null">
+                createDate,
+            </if>
+            <if test="updateDate != null">
+                updateDate,
+            </if>
+            <if test="createUserId != null">
+                createUserId,
+            </if>
+            <if test="updateUserId != null">
+                updateUserId,
+            </if>
+            <if test="fileAllUrl != null">
+                fileAllUrl,
+            </if>
+            <if test="fileDir != null">
+                fileDir,
+            </if>
+            <if test="deleteFlag != null">
+                deleteFlag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="fileName != null">
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=INTEGER},
+            </if>
+            <if test="updateUserId != null">
+                #{updateUserId,jdbcType=INTEGER},
+            </if>
+            <if test="fileAllUrl != null">
+                #{fileAllUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="fileDir != null">
+                #{fileDir,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="org.zjw.blog.deal.download.entity.FileRecord">
+        update filerecord
+        <set>
+            <if test="fileName != null">
+                fileName = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                createDate = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateDate != null">
+                updateDate = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUserId != null">
+                createUserId = #{createUserId,jdbcType=INTEGER},
+            </if>
+            <if test="updateUserId != null">
+                updateUserId = #{updateUserId,jdbcType=INTEGER},
+            </if>
+            <if test="fileAllUrl != null">
+                fileAllUrl = #{fileAllUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="fileDir != null">
+                fileDir = #{fileDir,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteFlag != null">
+                deleteFlag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="org.zjw.blog.deal.download.entity.FileRecord">
+    update filerecord
+    set fileName = #{fileName,jdbcType=VARCHAR},
+      createDate = #{createDate,jdbcType=TIMESTAMP},
+      updateDate = #{updateDate,jdbcType=TIMESTAMP},
+      createUserId = #{createUserId,jdbcType=INTEGER},
+      updateUserId = #{updateUserId,jdbcType=INTEGER},
+      fileAllUrl = #{fileAllUrl,jdbcType=VARCHAR},
+      fileDir = #{fileDir,jdbcType=VARCHAR},
+      deleteFlag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

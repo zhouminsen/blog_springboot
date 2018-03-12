@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.zjw.blog.deal.log.dao.LogOperationMapper" >
+  <resultMap id="BaseResultMap" type="org.zjw.blog.deal.log.entity.LogOperation" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ipAddress" property="ipAddress" jdbcType="VARCHAR" />
+    <result column="className" property="className" jdbcType="VARCHAR" />
+    <result column="methodName" property="methodName" jdbcType="VARCHAR" />
+    <result column="parameter" property="parameter" jdbcType="VARCHAR" />
+    <result column="success" property="success" jdbcType="INTEGER" />
+    <result column="sqlContent" property="sqlContent" jdbcType="VARCHAR" />
+    <result column="tableName" property="tableName" jdbcType="VARCHAR" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="createDate" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="deleteFlag" property="deleteFlag" jdbcType="INTEGER" />
+    <result column="moduleName" property="moduleName" jdbcType="VARCHAR" />
+    <result column="operationType" property="operationType" jdbcType="VARCHAR"/>
+    <result column="operationContent" property="operationContent" jdbcType="VARCHAR"/>
+  </resultMap>
+  <resultMap type="org.zjw.blog.base.vo.log.LogOperationVo" id="BaseResultMapVo" extends="BaseResultMap">
+  	<result column="username" property="username" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ipAddress, className, methodName, parameter, success, sqlContent, tableName, 
+    userId, createDate, deleteFlag, moduleName,operationType,operationContent
+  </sql>
+  
+  <!--多条件查询vo -->
+  <select id="selectVoByCondition" parameterType="map" resultMap="BaseResultMapVo">
+  	SELECT
+  	lo.id,lo.ipAddress,lo.className,lo.methodName,lo.parameter,lo.success,lo.sqlContent,lo.tableName,
+  	lo.operationType,lo.userId,lo.createDate,lo.deleteFlag,lo.moduleName,lo.operationContent,b.username
+	FROM 
+	log_operation lo LEFT JOIN blogger b ON(lo.userId=b.id AND b.deleteFlag=1) 
+	<where>
+	lo.deleteFlag=1
+	</where> 
+	ORDER BY lo.createDate DESC 
+	<!--<if test="start!=null and rows!=null">
+  	LIMIT #{start},#{rows}
+  	</if> -->
+  </select>
+  
+  <!-- 多条件查询vo记录数 -->
+   <select id="selectVoCountByCondition" parameterType="map" resultType="int">
+  	SELECT
+  	COUNT(*)
+	FROM 
+	log_operation lo LEFT JOIN blogger b ON(lo.userId=b.id AND b.deleteFlag=1) 
+	<where>
+	lo.deleteFlag=1
+	</where> 
+  </select>
+  
+  <!-- 逻辑批删除 -->
+   <update id="deleteLogicBatch">
+  	UPDATE log_operation 
+  	SET deleteFlag=0 
+  	WHERE deleteFlag=1 
+  	AND <foreach collection="list" open="(" close=")" item="id" separator="or">
+  		id=#{id}
+  	</foreach>
+  </update>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from log_operation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from log_operation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.zjw.blog.deal.log.entity.LogOperation" >
+    insert into log_operation (id, ipAddress, className, 
+      methodName, parameter, success, 
+      sqlContent, tableName, userId, 
+      createDate, deleteFlag, moduleName
+      ,operationType,operationContent
+      )
+    values (#{id,jdbcType=INTEGER}, #{ipAddress,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR}, 
+      #{methodName,jdbcType=VARCHAR}, #{parameter,jdbcType=VARCHAR}, #{success,jdbcType=INTEGER}, 
+      #{sqlContent,jdbcType=VARCHAR}, #{tableName,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER}, #{moduleName,jdbcType=VARCHAR},
+      #{operationType,jdbcType=VARCHAR},#{operationContent,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zjw.blog.deal.log.entity.LogOperation" >
+    insert into log_operation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ipAddress != null" >
+        ipAddress,
+      </if>
+      <if test="className != null" >
+        className,
+      </if>
+      <if test="methodName != null" >
+        methodName,
+      </if>
+      <if test="parameter != null" >
+        parameter,
+      </if>
+      <if test="success != null" >
+        success,
+      </if>
+      <if test="sqlContent != null" >
+        sqlContent,
+      </if>
+      <if test="tableName != null" >
+        tableName,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="createDate != null" >
+        createDate,
+      </if>
+      <if test="deleteFlag != null" >
+        deleteFlag,
+      </if>
+      <if test="moduleName != null" >
+        moduleName,
+      </if>
+      <if test="operationType != null" >
+        operationType,
+      </if>
+       <if test="operationContent != null" >
+        operationContent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="ipAddress != null" >
+        #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null" >
+        #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="methodName != null" >
+        #{methodName,jdbcType=VARCHAR},
+      </if>
+      <if test="parameter != null" >
+        #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="success != null" >
+        #{success,jdbcType=INTEGER},
+      </if>
+      <if test="sqlContent != null" >
+        #{sqlContent,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="moduleName != null" >
+        #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="operationType != null" >
+        #{operationType,jdbcType=VARCHAR},
+      </if>
+      <if test="operationContent != null" >
+        #{operationContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zjw.blog.deal.log.entity.LogOperation" >
+    update log_operation
+    <set >
+      <if test="ipAddress != null" >
+        ipAddress = #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null" >
+        className = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="methodName != null" >
+        methodName = #{methodName,jdbcType=VARCHAR},
+      </if>
+      <if test="parameter != null" >
+        parameter = #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="success != null" >
+        success = #{success,jdbcType=INTEGER},
+      </if>
+      <if test="sqlContent != null" >
+        sqlContent = #{sqlContent,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        tableName = #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        userId = ##{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        createDate = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        deleteFlag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="moduleName != null" >
+        moduleName = #{moduleName,jdbcType=VARCHAR},
+      </if>
+       <if test="operationType != null" >
+        #{operationType,jdbcType=VARCHAR},
+      </if>
+       <if test="operationContent != null" >
+        #{operationContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zjw.blog.deal.log.entity.LogOperation" >
+    update log_operation
+    set ipAddress = #{ipAddress,jdbcType=VARCHAR},
+      className = #{className,jdbcType=VARCHAR},
+      methodName = #{methodName,jdbcType=VARCHAR},
+      parameter = #{parameter,jdbcType=VARCHAR},
+      success = #{success,jdbcType=INTEGER},
+      sqlContent = #{sqlContent,jdbcType=VARCHAR},
+      tableName = #{tableName,jdbcType=VARCHAR},
+      userId = #{userId,jdbcType=INTEGER},
+      createDate = #{createDate,jdbcType=TIMESTAMP},
+      deleteFlag = #{deleteFlag,jdbcType=INTEGER},
+      moduleName = #{moduleName,jdbcType=VARCHAR},
+      operationType=#{operationType,jdbcType=VARCHAR}
+      operationContent=#{operationContent,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

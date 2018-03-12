@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.zjw.blog.deal.log.dao.LogErrorMapper" >
+  <resultMap id="BaseResultMap" type="org.zjw.blog.deal.log.entity.LogError" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ipAddress" property="ipAddress" jdbcType="VARCHAR" />
+    <result column="className" property="className" jdbcType="VARCHAR" />
+    <result column="methodName" property="methodName" jdbcType="VARCHAR" />
+    <result column="parameter" property="parameter" jdbcType="VARCHAR" />
+    <result column="exceptionInfo" property="exceptionInfo" jdbcType="VARCHAR" />
+    <result column="sqlContent" property="sqlContent" jdbcType="VARCHAR" />
+    <result column="tableName" property="tableName" jdbcType="VARCHAR" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="createDate" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="deleteFlag" property="deleteFlag" jdbcType="INTEGER" />
+    <result column="moduleName" property="moduleName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ipAddress, className, methodName, parameter, exceptionInfo, sqlContent, tableName, 
+    userId, createDate, deleteFlag, moduleName
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from log_error
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from log_error
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.zjw.blog.deal.log.entity.LogError" >
+    insert into log_error (id, ipAddress, className, 
+      methodName, parameter, exceptionInfo, 
+      sqlContent, tableName, userId, 
+      createDate, deleteFlag, moduleName
+      )
+    values (#{id,jdbcType=INTEGER}, #{ipAddress,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR}, 
+      #{methodName,jdbcType=VARCHAR}, #{parameter,jdbcType=VARCHAR}, #{exceptionInfo,jdbcType=VARCHAR}, 
+      #{sqlContent,jdbcType=VARCHAR}, #{tableName,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER}, #{moduleName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zjw.blog.deal.log.entity.LogError" >
+    insert into log_error
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ipAddress != null" >
+        ipAddress,
+      </if>
+      <if test="className != null" >
+        className,
+      </if>
+      <if test="methodName != null" >
+        methodName,
+      </if>
+      <if test="parameter != null" >
+        parameter,
+      </if>
+      <if test="exceptionInfo != null" >
+        exceptionInfo,
+      </if>
+      <if test="sqlContent != null" >
+        sqlContent,
+      </if>
+      <if test="tableName != null" >
+        tableName,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="createDate != null" >
+        createDate,
+      </if>
+      <if test="deleteFlag != null" >
+        deleteFlag,
+      </if>
+      <if test="moduleName != null" >
+        moduleName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="ipAddress != null" >
+        #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null" >
+        #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="methodName != null" >
+        #{methodName,jdbcType=VARCHAR},
+      </if>
+      <if test="parameter != null" >
+        #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="exceptionInfo != null" >
+        #{exceptionInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="sqlContent != null" >
+        #{sqlContent,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="moduleName != null" >
+        #{moduleName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zjw.blog.deal.log.entity.LogError" >
+    update log_error
+    <set >
+      <if test="ipAddress != null" >
+        ipAddress = #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null" >
+        className = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="methodName != null" >
+        methodName = #{methodName,jdbcType=VARCHAR},
+      </if>
+      <if test="parameter != null" >
+        parameter = #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="exceptionInfo != null" >
+        exceptionInfo = #{exceptionInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="sqlContent != null" >
+        sqlContent = #{sqlContent,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        tableName = #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        createDate = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        deleteFlag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="moduleName != null" >
+        moduleName = #{moduleName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zjw.blog.deal.log.entity.LogError" >
+    update log_error
+    set ipAddress = #{ipAddress,jdbcType=VARCHAR},
+      className = #{className,jdbcType=VARCHAR},
+      methodName = #{methodName,jdbcType=VARCHAR},
+      parameter = #{parameter,jdbcType=VARCHAR},
+      exceptionInfo = #{exceptionInfo,jdbcType=VARCHAR},
+      sqlContent = #{sqlContent,jdbcType=VARCHAR},
+      tableName = #{tableName,jdbcType=VARCHAR},
+      userId = #{userId,jdbcType=INTEGER},
+      createDate = #{createDate,jdbcType=TIMESTAMP},
+      deleteFlag = #{deleteFlag,jdbcType=INTEGER},
+      moduleName = #{moduleName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

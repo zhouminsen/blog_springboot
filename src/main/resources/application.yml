@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/db_blog3?useUnicode=true&amp;allowMultiQueries=true&amp;characterEncoding=UTF-8
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+  jpa:
+    show-sql: true
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  jackson:
+    default-property-inclusion: non_null
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  thymeleaf:
+    cache: false
+    mode: HTML5
+mybatis:
+  mapper-locations: classpath:org/zjw/blog/deal/**/dao/*.xml
+server:
+  context-path: /blog
+ftp:
+  host: 61.129.71.106
+  port: 21
+  user: jh-yuncheng
+  password: jhyc@123
+  pathname: /home/ftpuser

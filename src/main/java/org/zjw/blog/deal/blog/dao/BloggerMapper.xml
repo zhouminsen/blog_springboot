@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.zjw.blog.deal.blog.dao.BloggerMapper" >
+  <resultMap id="BaseResultMap" type="org.zjw.blog.deal.blog.entity.Blogger" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="nickName" property="nickName" jdbcType="VARCHAR" />
+    <result column="sign" property="sign" jdbcType="VARCHAR" />
+    <result column="imageName" property="imageName" jdbcType="VARCHAR" />
+    <result column="profile" property="profile" jdbcType="LONGVARCHAR" />
+    <result column="subImageName" property="subImageName" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, username, password, nickName, sign, imageName, profile,subImageName
+  </sql>
+  <select id="selectByCondition" parameterType="map" resultMap="BaseResultMap">
+  	 select 
+  	 <include refid="Base_Column_List" />
+  	  from blogger  
+  	  <where>
+  	  <if test="username!=null and username!=''">
+  	  username=#{username}
+  	  </if> 
+  	  </where>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from blogger
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 查询日期下的博客数量 -->
+  <select id="selectDateCountByReleaseDate" resultType="map" parameterType="map">
+  		SELECT
+		DATE_FORMAT(releaseDate,'%Y-%m') AS releaseDate,
+		Count(*) AS blogCount
+		FROM t_blog
+		GROUP BY DATE_FORMAT(releaseDate,'%Y-%m')
+		ORDER BY DATE_FORMAT(releaseDate,'%Y-%m') DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from blogger
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.zjw.blog.deal.blog.entity.Blogger" >
+    insert into blogger (id, username, password, 
+      nickName, sign, imageName, 
+      profile,subImageName)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{nickName,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}, #{imageName,jdbcType=VARCHAR}, 
+      #{profile,jdbcType=LONGVARCHAR},#{subImageName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zjw.blog.deal.blog.entity.Blogger" >
+    insert into blogger
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="nickName != null" >
+        nickName,
+      </if>
+      <if test="sign != null" >
+        sign,
+      </if>
+      <if test="imageName != null" >
+        imageName,
+      </if>
+      <if test="profile != null" >
+        profile,
+      </if>
+       <if test="subImageName != null" >
+        subImageName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null" >
+        #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="imageName != null" >
+        #{imageName,jdbcType=VARCHAR},
+      </if>
+      <if test="profile != null" >
+        #{profile,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="subImageName != null" >
+        #{subImageName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="org.zjw.blog.deal.blog.entity.Blogger" >
+    update blogger
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nickName = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null" >
+        sign = #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="imageName != null" >
+        imageName = #{imageName,jdbcType=VARCHAR},
+      </if>
+      <if test="profile != null" >
+        profile = #{profile,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="subImageName != null" >
+        subImageName=#{subImageName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+ 
+  <update id="updateByPrimaryKey" parameterType="org.zjw.blog.deal.blog.entity.Blogger" >
+    update blogger
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      nickName = #{nickName,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=VARCHAR},
+      imageName = #{imageName,jdbcType=VARCHAR},
+      subImageName=#{subImageName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

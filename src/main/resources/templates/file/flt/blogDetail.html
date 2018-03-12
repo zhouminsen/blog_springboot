@@ -1,0 +1,315 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>-Powered by java1234</title>
+
+<link rel="stylesheet" href="../../Blog/static/bootstrap3/css/bootstrap.min.css">
+<link rel="stylesheet" href="../../Blog/static/bootstrap3/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="../../Blog/static/css/blog.css">
+<link href="http://blog.java1234.com/favicon.ico" rel="SHORTCUT ICON">
+<script src="../../Blog/static/bootstrap3/js/jquery-1.11.2.min.js"></script>
+<script src="../../Blog/static/bootstrap3/js/bootstrap.min.js"></script>
+
+<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?aa5c701f4f646931bf78b6f40b234ef5";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+</script>
+
+<style type="text/css">
+	  body {
+        padding-top: 10px;
+        padding-bottom: 40px;
+      }
+</style>
+</head>
+<body>
+<div class="container">
+	
+<div class="row">
+	<div class="col-md-4">
+		<img alt="java1234开源博客系统" src="../../Blog/static/images/logo.png">
+	</div>
+	<div class="col-md-8">
+		<iframe style="float: right;" width="420" scrolling="no" height="60" frameborder="0" allowtransparency="true" src="http://i.tianqi.com/index.php?c=code&id=12&icon=1&num=5"></iframe>
+	</div>
+</div>
+	
+	
+<script type="text/javascript">
+	function checkData(){
+		var keyword=document.getElementById("keyword").value.trim();
+		if(keyword==null ||keyword==""){
+			alert("请输入您要查询的关键字！");
+			return false;
+		}else{
+			return true;
+		}
+	}
+</script>
+<div class="row">
+	<div class="col-md-12" style="padding-top: 10px">
+		<nav class="navbar navbar-default">
+		  <div class="container-fluid">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header">
+		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		      <a class="navbar-brand" href="/Blog/index"><font color="black"><strong>首页</strong></font></a>
+		    </div>
+
+		    <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
+		      <ul class="nav navbar-nav">
+		        <!-- <li><a href="#"><font color="black"><strong>Java1234官网</strong></font></a></li> -->
+		        <!-- <li><a href="#"><font color="black"><strong>Java学习路线图</strong></font></a></li> -->
+		        <!-- <li><a href="#"><font color="red"><strong>Java1234 VIP项目</strong></font></a></li> -->
+		        <li><a href="/Blog/blogger/aboutMe"><font color="black"><strong>关于博主</strong></font></a></li>
+		        <li><a href="/Blog/download"><font color="black"><strong>本站源码下载</strong></font></a></li>
+		      </ul>
+		      <form action="/Blog/blog/search" class="navbar-form navbar-right" role="search" method="post" onsubmit="return checkData()">
+		        <div class="form-group" >
+		          <input type="text" id="keyword" name="keyword" value="" class="form-control" placeholder="请输入要查询的关键字...">
+		        </div>
+		        <button type="submit" class="btn btn-default">搜索</button>
+		      </form>
+		    </div><!-- /.navbar-collapse -->
+		  </div><!-- /.container-fluid -->
+		</nav>
+	</div>
+</div>
+	
+	<div class="row">
+		<div class="col-md-9">
+		<script type="text/javascript" src="../../Blog/static/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
+<link rel="stylesheet" href="../../Blog/static/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css">
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+</script>
+
+
+
+
+<script type="text/javascript">
+	function loadimage(){
+		document.getElementById("randImage").src="/Blog/foreground/blogCommentVerifyCode.jsp?"+Math.random();
+	}
+	
+	function submitData(){
+		var content=$("#content").val();
+		var imageCode=$("#imageCode").val();
+		if(content==null || content==''){
+			alert("请输入评论内容！");
+		}else if(imageCode==null || imageCode==''){
+			alert("请填写验证码！");
+		}else{
+			$.post("/Blog/comment/save",{'content':content,'imageCode':imageCode,'blogId':'71'},function(result){
+				if(result.success){
+					window.location.reload();
+					alert("评论已提交成功，审核通过后显示！");
+				}else{
+					alert(result.errorInfo);
+				}
+			},"json");
+		}
+	}
+	
+	function showOtherComment(){
+		$('.otherComment').show();
+	}
+</script>
+<div class="data_list">
+	<div class="data_list_title">
+		<img src="../../Blog/static/images/blog_show_icon.png"/>
+		博客信息
+	</div>
+	<div>
+	   <div class="blog_title"><h3><strong>${blog.title }</strong></h3></div>
+	   <div style="padding-left: 330px;padding-bottom: 20px;padding-top: 10px">
+		<div class="bshare-custom"><a title="分享到QQ空间" class="bshare-qzone"></a><a title="分享到新浪微博" class="bshare-sinaminiblog"></a><a title="分享到人人网" class="bshare-renren"></a><a title="分享到腾讯微博" class="bshare-qqmb"></a><a title="分享到网易微博" class="bshare-neteasemb"></a><a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a><span class="BSHARE_COUNT bshare-share-count">0</span></div><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=1&amp;lang=zh"></script><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+	   </div>
+		<div class="blog_info">
+			发布时间："${blog.releaseDate?datetime }" 
+			&nbsp;&nbsp;博客类别：${blog.blogType.typeName}&nbsp;&nbsp;阅读(${blog.clickHit}) 评论(${blog.replyHit})
+		</div>
+		<div class="blog_content">
+			${blog.content }
+		</div>
+		<div class="blog_keyWord">
+			<font><strong>关键字：</strong></font>
+				<#if keyWords??>
+					<#list keyWords as keyword>
+						&nbsp;&nbsp;<a  href="${cxt}/blog/q?q=${keyword}" target="_blank">${keyword}</a>&nbsp;&nbsp;
+					</#list>
+				<#else>
+					&nbsp;&nbsp;无
+				</#if>
+		</div>
+		<div class="blog_lastAndNextPage">
+			${pageCode!'无' }
+		</div>
+	</div>
+</div>
+<div class="data_list">
+	<div class="data_list_title">
+		<img src="../../Blog/static/images/comment_icon.png"/>
+		评论信息    
+	</div>
+		<div class="commentDatas">
+		<#if commentList??>
+			<#if commentList?size=0>
+				暂无评论
+			<#else>
+				<#list commentList as comment>
+					<#if comment_index lt 10>
+					<div class="comment">
+					<span><font>${comment_index+1}楼&nbsp;&nbsp;&nbsp;&nbsp;${comment.userIp }：
+					</font>${comment.content }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;${comment.commentDate?datetime}&nbsp;]</span>
+					</div>
+					<#else>
+					<div class="otherComment">
+					<div class="comment">
+					<span><font>${comment_index+1}楼&nbsp;&nbsp;&nbsp;&nbsp;${comment.userIp }：
+					</font>${comment.content }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;${comment.commentDate?datetime}&nbsp;]</span>
+					</div>
+					</div>
+					</#if>
+				</#list>
+			</#if>
+		</#if>
+	</div>
+</div>
+
+<div class="data_list" >
+	<div class="data_list_title">
+		<img src="../../Blog/static/images/publish_comment_icon.png"/>
+		发表评论
+	</div>
+	<div class="publish_comment">
+			<div>
+				<textarea style="width: 100%" rows="3" id="content" name="content" placeholder="来说两句吧..."></textarea>
+			</div>
+			<div class="verCode">
+				验证码：<input type="text" value="" name="imageCode"  id="imageCode" size="10" onkeydown= "if(event.keyCode==13)form1.submit()"/>&nbsp;
+				<img onclick="javascript:loadimage();"  title="换一张试试" name="randImage" id="randImage" src="/Blog/foreground/verifyCode.jsp" width="60" height="20" border="1" align="absmiddle"> 
+			</div>
+			<div class="publishButton">
+				<button class="btn btn-primary" type="button" onclick="submitData()">发表评论</button>
+			</div>
+		</form>
+	</div>
+</div>
+		</div>
+		
+		<div class="col-md-3">
+			<div class="data_list">
+				<div class="data_list_title">
+					<img src="../../Blog/static/images/user_icon.png"/>
+					博主信息
+				</div>
+				<div class="user_image">
+					<img src="../../Blog/static/userImages/20160824134945.JPG"/>
+				</div>
+				<div class="nickName">周家伟</div>
+				<div class="userSign">(知识改变命运，技术改变世界122)</div>
+			</div>
+			
+			<div class="data_list">
+				<div class="data_list_title">
+					<img src="../../Blog/static/images/byType_icon.png"/>
+					按日志类别
+				</div>
+				<div class="datas">
+					<ul>
+						
+						<li><span>
+							<a href="/Blog/index?typeId=3">Tomcat(4)</a>
+						</span></li>
+						
+						<li><span>
+							<a href="/Blog/index?typeId=4">IT之路(6)</a>
+						</span></li>
+						
+						<li><span>
+							<a href="/Blog/index?typeId=5">随心生活(5)</a>
+						</span></li>
+						
+						<li><span>
+							<a href="/Blog/index?typeId=10">jsoup(1)</a>
+						</span></li>
+						
+						<li><span>
+							<a href="/Blog/index?typeId=11">hibernate(1)</a>
+						</span></li>
+						
+					</ul>
+				</div>
+			</div>
+			
+			<div class="data_list">
+				<div class="data_list_title">
+					<img src="../../Blog/static/images/byDate_icon.png"/>
+					按日志日期
+				</div>
+				<div class="datas">
+					<ul>
+						
+							<li><span><a href="/Blog/index?releaseDate=2016-03">2016-03(8)</a></span></li>
+						
+							<li><span><a href="/Blog/index?releaseDate=2016-02">2016-02(23)</a></span></li>
+						
+							<li><span><a href="/Blog/index?releaseDate=2016-01">2016-01(1)</a></span></li>
+						
+					</ul>
+				</div>
+			</div>
+			<div class="data_list">
+				<div class="data_list_title">
+					<img src="../../Blog/static/images/link_icon.png"/>
+					友情链接
+				</div>
+				<div class="datas">
+					<ul>
+						
+							<li><span><a href="http://www.java1234.com/" target="_blank">Java知识分享网</a></span></li>
+						
+							<li><span><a href="http://pan.java1234.com/" target="_blank">百度云搜索引擎</a></span></li>
+						
+							<li><span><a href="http://www.easyicon.net/" target="_blank">小图标下载</a></span></li>
+						
+							<li><span><a href="http://tieba.baidu.com/f?kw=java" target="_blank">Java贴吧</a></span></li>
+						
+							<li><span><a href="http://www.uugai.com/" target="_blank">免费logo在线制作</a></span></li>
+						
+							<li><span><a href="http://www.localhost:8080/Blog/admin/first.html" target="_blank">周家伟</a></span></li>
+						
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+		
+		
+	</div>
+	
+	
+<div class="row">
+	<div class="col-md-12" >
+		<div align="center" style="padding-top: 120px" >
+			<span style="float: left;">Powered by <a  href="http://blog.java1234.com" target="_blank">Java1234</a> V3.0</span>
+			  Copyright © 2012-2016 Java知识分享网 版权所有
+		</div>
+	</div>
+</div>
+</div>
+</body>
+</html>

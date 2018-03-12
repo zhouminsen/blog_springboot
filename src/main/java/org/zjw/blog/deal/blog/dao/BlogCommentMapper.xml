@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.zjw.blog.deal.blog.dao.BlogCommentMapper" >
+  <resultMap id="BaseResultMap" type="org.zjw.blog.deal.blog.entity.BlogComment" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userIp" property="userIp" jdbcType="VARCHAR" />
+    <result column="blogId" property="blogId" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="commentDate" property="commentDate" jdbcType="TIMESTAMP" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap type="org.zjw.blog.base.vo.blog.BlogCommentVo" id="BaseResultMapVo" extends="BaseResultMap">
+  	<!-- javaType必须要加上,不然会报空指针异常 -->
+  	<association property="blog" javaType="org.zjw.blog.deal.blog.entity.Blog">
+	  <id column="blogId" property="id" jdbcType="INTEGER"/>
+  	  <result column="title" property="title" jdbcType="VARCHAR"/>
+  	</association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userIp, blogId, content, commentDate, state
+  </sql>
+  <select id="selectByCondition" resultMap="BaseResultMap" parameterType="map" >
+	select  
+	<include refid="Base_Column_List"/>
+	from blog_comment
+	<where>
+		blogId=#{blogId}
+	</where> 
+  </select>
+  
+  <!-- 多条件查询vo-->
+  <select id="selectVoByCondition" resultMap="BaseResultMapVo"  parameterType="map" >
+	select 
+	bc.id,bc.userIp, b.id as blogId, bc.content, bc.commentDate, bc.state ,b.title as title
+	from 
+	blog_comment bc LEFT JOIN blog b on(bc.blogId=b.id and bc.deleteFlag=1)
+	where 1=1
+	<if test="userId!=null">
+		AND	b.userId=#{userId}
+	</if>
+	<if test="state!=null">
+		AND state=#{state} 
+	</if>
+	<if test="start!=null and rows!=null">
+	LIMIT #{start},#{rows}
+	</if>	
+  </select>
+  <!-- 多条件查询vo记录数 -->
+  <select id="selectVoCountByCondition" resultType="int" parameterType="map" >
+	SELECT 
+	COUNT(*)
+	FROM 
+	blog_comment bc LEFT JOIN blog b on(bc.blogId=b.id and bc.deleteFlag=1)
+	where 1=1
+	<if test="userId!=null">
+		AND	b.userId=#{userId}
+	</if>
+	<if test="deleteFlag!=null">
+		AND deleteFlag=#{deleteFlag}
+	</if>
+	<if test="state!=null">
+		AND state=#{state}
+	</if> 
+  </select>
+  <select id="selectByBlogId" resultMap="BaseResultMap" parameterType="int" >
+	select  
+	<include refid="Base_Column_List"/>
+	from blog_comment
+	where 
+	blogId=#{blogId}
+	AND deleteFlag=1
+	AND state=1
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from blog_comment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <update id="deleteLogicBatch">
+  	UPDATE  blog_comment SET deleteFlag=0
+  	where deleteFlag=1 
+  	AND id IN
+  	<foreach collection="array" item="id" open="(" close=")" separator="," >
+  		#{id}
+  	</foreach> 
+  </update>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from blog_comment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.zjw.blog.deal.blog.entity.BlogComment" >
+    insert into blog_comment (id, userIp, blogId,
+      content, commentDate, state
+      )
+    values (#{id,jdbcType=INTEGER}, #{userIp,jdbcType=VARCHAR}, #{blogId,jdbcType=INTEGER}, 
+      #{content,jdbcType=VARCHAR}, #{commentDate,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zjw.blog.deal.blog.entity.BlogComment" >
+    insert into blog_comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userIp != null" >
+        userIp,
+      </if>
+      <if test="blogId != null" >
+        blogId,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="commentDate != null" >
+        commentDate,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userIp != null" >
+        #{userIp,jdbcType=VARCHAR},
+      </if>
+      <if test="blogId != null" >
+        #{blogId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="commentDate != null" >
+        #{commentDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zjw.blog.deal.blog.entity.BlogComment" >
+    update blog_comment
+    <set >
+      <if test="userIp != null" >
+        userIp = #{userIp,jdbcType=VARCHAR},
+      </if>
+      <if test="blogId != null" >
+        blogId = #{blogId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="commentDate != null" >
+        commentDate = #{commentDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zjw.blog.deal.blog.entity.BlogComment" >
+    update blog_comment
+    set userIp = #{userIp,jdbcType=VARCHAR},
+      blogId = #{blogId,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      commentDate = #{commentDate,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectByBlogIdbb" parameterType="map"></select>
+</mapper>
