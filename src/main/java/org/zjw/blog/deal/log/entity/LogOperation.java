@@ -2,11 +2,15 @@ package org.zjw.blog.deal.log.entity;
 
 import lombok.Data;
 import org.zjw.blog.base.common.entity.BaseEntity;
+
+import java.util.Date;
+
 @Data
 public class LogOperation extends BaseEntity{
 
 
     private static final long serialVersionUID = -9043179055524185457L;
+
     private Integer id;
 
     /**
@@ -23,7 +27,7 @@ public class LogOperation extends BaseEntity{
      * 方法名称
      */
     private String methodName;
-    
+
     /**
      * 参数
      */
@@ -33,12 +37,12 @@ public class LogOperation extends BaseEntity{
      * 是否成功
      */
     private Integer success;
-    
+
     /**
      * 操作类型
      */
     private String operationType;
-    
+
     /**
      * sql语句
      */
@@ -57,11 +61,14 @@ public class LogOperation extends BaseEntity{
      * 模块名称
      */
     private String moduleName;
-    
+
     /**
      * 操作内容
      */
     private String operationContent;
+
+    private Date createDate;
+    private Integer deleteFlag;
 
 
 }

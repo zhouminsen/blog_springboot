@@ -1,8 +1,8 @@
 package org.zjw.blog.deal.link.entity;
 
 import lombok.Data;
-import org.zjw.blog.base.common.entity.BaseEntity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,7 +11,7 @@ import java.util.Date;
  * @date 2016-7-16
  */
 @Data
-public class Link extends BaseEntity {
+public class Link implements Serializable {
 
     private static final long serialVersionUID = -4658362516367090087L;
     private Integer id;

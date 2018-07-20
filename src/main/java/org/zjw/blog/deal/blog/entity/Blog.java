@@ -34,12 +34,15 @@ public class Blog extends BaseEntity {
     private String keyWord;
 
     private String content;
-    
+
     private Integer userId;
-    
+
     private Integer state;
 
-	private List<String> imgList=new ArrayList<String>();
+    private List<String> imgList=new ArrayList<String>();
+
+    private Date createDate;
+    private String deleteFlag;
     
     
     public Blog() {

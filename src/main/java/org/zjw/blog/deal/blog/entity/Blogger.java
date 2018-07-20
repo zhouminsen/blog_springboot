@@ -1,15 +1,19 @@
 package org.zjw.blog.deal.blog.entity;
 
 import lombok.Data;
-import org.zjw.blog.base.common.entity.BaseEntity;
 import org.zjw.blog.base.system.UserConstant;
+
+import java.io.Serializable;
 
 /**
  * @author 周家伟
  * @date 2016-7-16
  */
 @Data
-public class Blogger extends BaseEntity {
+public class Blogger implements Serializable {
+
+    private static final long serialVersionUID = 7590465230268027719L;
+
     private Integer id;
 
     private String username;
@@ -25,6 +29,8 @@ public class Blogger extends BaseEntity {
     private String profile;
 
     private String subImageName;
+    private String createDate;
+    private String deleteFlag;
 
 
     /**

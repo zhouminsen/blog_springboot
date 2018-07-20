@@ -1,9 +1,11 @@
 package org.zjw.blog.deal.permission.entity;
 
 import lombok.Data;
-import org.zjw.blog.base.common.entity.BaseEntity;
+
+import java.io.Serializable;
+
 @Data
-public class Role extends BaseEntity {
+public class Role implements Serializable {
 
 
     private static final long serialVersionUID = -174781208654764070L;
@@ -17,4 +19,6 @@ public class Role extends BaseEntity {
 
     private String description;
 
+    private String createDate;
+    private String deleteFlag;
 }

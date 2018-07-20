@@ -2,7 +2,9 @@ package org.zjw.blog.deal.blog.entity;
 
 
 import lombok.Data;
-import org.zjw.blog.base.common.entity.BaseEntity;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 
@@ -11,13 +13,19 @@ import org.zjw.blog.base.common.entity.BaseEntity;
  */
 
 @Data
-public class BlogType extends BaseEntity {
+public class BlogType implements Serializable {
+
+
+	private static final long serialVersionUID = 2775486934139501586L;
+
 	private Integer id;
 
 	private String typeName;
 
 	private Integer orderNo;
 
+	private Date createDate;
+	private String deleteFlag;
 
 
 }
